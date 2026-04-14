@@ -1,0 +1,7 @@
+services:
+  swish:
+    image: swipl/swish
+    ports:
+      - 3050:3050
+    volumes:
+      - ./data:/data
