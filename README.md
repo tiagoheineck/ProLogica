@@ -6,20 +6,211 @@ docker compose up
 
 Você terá que copiar e colar os arquivos .pl dentro do software que subirá
 
-# Guia Prático de Prolog
-## Comandos e Operadores Essenciais 🧠🐍
 
-Este guia é uma **referência rápida** dos principais comandos e operadores da linguagem **Prolog**, voltado para alunos de **Ciência da Computação** que já dominam programação imperativa e orientada a objetos.
+# Guia Didático de Prolog 🐍🧠
+## Comandos, Operadores e Conceitos Fundamentais
 
-> 💡 Em Prolog, você **declara fatos e regras**.  
-> O motor lógico cuida do *como*.
+Este guia foi pensado para a disciplina de **Programação Lógica** do curso de **Ciência da Computação (5ª fase)**.
+
+Aqui o objetivo é **entender como o Prolog pensa**, não apenas decorar comandos.
+Se você já programa em C, Java ou Python, prepare-se: **o paradigma muda** 😉
 
 ---
 
-## 1. Estrutura Básica do Prolog
+## 1. O que é Prolog?
+
+Prolog é uma linguagem baseada em **lógica de predicados**.
+Você não descreve um algoritmo passo a passo. Em vez disso, você declara:
+
+- **Fatos** (o que é verdade)
+- **Regras** (como verdades se relacionam)
+- **Consultas** (o que você quer saber)
+
+O Prolog usa **unificação** e **backtracking** para encontrar respostas.
+
+---
+
+## 2. Estrutura Básica do Prolog
 
 ### Fatos
 Declaram algo que é verdadeiro.
 
 ```prolog
 pai(joao, maria).
+```
+
+### Regras
+Definem relações entre fatos.
+
+```prolog
+avo(X, Y) :- pai(X, Z), pai(Z, Y).
+```
+
+Leia como:
+> X é avô de Y **se** X é pai de Z **e** Z é pai de Y
+
+### Consultas
+Perguntas feitas ao sistema.
+
+```prolog
+?- avo(joao, X).
+```
+
+📌 **Toda cláusula termina com ponto final (`.`)**
+
+---
+
+## 3. Operadores Lógicos
+
+| Operador | Significado | Intuição |
+|--------|------------|----------|
+| `,` | AND lógico | "e" |
+| `;` | OR lógico | "ou" |
+| `\+` | Negação como falha | "não consigo provar" |
+| `->` | If-then | se-então |
+| `*->` | If-then-else | se-então-senão |
+
+Exemplo:
+
+```prolog
+responsavel(X,Y) :- pai(X,Y); mae(X,Y).
+```
+
+⚠️ `\+ P` **não significa** que P é falso,
+apenas que **P não pode ser provado**.
+
+---
+
+## 4. Unificação e Comparação
+
+### Unificação (`=`)
+
+```prolog
+X = 10.
+```
+
+Significa: *X pode assumir o valor 10*.
+
+### Igualdade estrita (`==`)
+
+```prolog
+X == 10.
+```
+
+Significa: *X já é exatamente 10*.
+
+| Operador | Uso |
+|--------|-----|
+| `=` | Unificação |
+| `\=` | Diferente |
+| `==` | Igualdade estrita |
+| `\==` | Diferença estrita |
+| `> < >= =<` | Comparações aritméticas |
+
+📌 **Unificação não é comparação**.
+
+---
+
+## 5. Aritmética em Prolog
+
+Prolog **não avalia expressões automaticamente**.
+
+❌ Errado:
+```prolog
+X = 2 + 3.
+```
+
+✅ Certo:
+```prolog
+X is 2 + 3.
+```
+
+### Operadores aritméticos
+
+- `+  -  *  /`
+- `mod` (resto)
+- `//` (divisão inteira)
+
+---
+
+## 6. Controle de Execução
+
+| Comando | Função |
+|------|-------|
+| `!` | Cut (corte) |
+| `fail` | Força falha |
+| `true` | Sempre verdadeiro |
+| `repeat` | Laço com backtracking |
+
+### Exemplo com cut
+
+```prolog
+max(X,Y,X) :- X >= Y, !.
+max(_,Y,Y).
+```
+
+✂️ O `cut` **impede o backtracking**.
+Use somente quando souber exatamente o que está fazendo.
+
+---
+
+## 7. Listas
+
+### Estrutura
+
+```prolog
+[]        % lista vazia
+[H|T]     % cabeça e cauda
+```
+
+### Predicados mais usados
+
+- `member/2`
+- `append/3`
+- `length/2`
+
+Exemplo:
+
+```prolog
+member(X, [a,b,c]).
+```
+
+---
+
+## 8. Entrada, Saída e Ambiente
+
+### Entrada e saída
+
+- `write/1`
+- `writeln/1`
+- `nl/0`
+- `read/1`
+
+### Ambiente e depuração
+
+- `listing.`
+- `trace.`
+- `notrace.`
+- `consult(arquivo).`
+- `[arquivo].`
+- `halt.`
+
+---
+
+## 9. Boas Práticas em Prolog
+
+- Pense em **relações**, não em algoritmos
+- Evite `cut` como gambiarra
+- Teste várias consultas
+- Use `trace` para entender o backtracking
+- Se parece Java, **releia o problema** 😄
+
+---
+
+## 🎓 Dica Final do Professor
+
+> Em Prolog, quanto menos você tenta mandar,
+> mais o sistema consegue trabalhar.
+
+Confie na lógica.
+Confie no backtracking.
