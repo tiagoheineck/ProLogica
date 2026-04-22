@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz de Diagnostico - Prolog + Python</title>
+  <style>
+    :root {
+      --bg-1: #f7f4ea;
+      --bg-2: #e6f1ef;
+      --card: #ffffff;
+      --ink: #17252a;
+      --muted: #46666b;
+      --accent: #d95f02;
+      --accent-2: #1b7f79;
+      --line: #d8e1df;
+      --ok: #2a9d8f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 20%, #fff4d8 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, #d6efe6 0%, transparent 35%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #fff, #f5fbfa);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.3rem;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      animation: subir 500ms ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      letter-spacing: 0.4px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      animation: subir 700ms ease;
+    }
+
+    .symptoms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.45rem 0.55rem;
+      background: #fbfdfd;
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    label:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent-2);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: #edf7f6;
+      color: var(--accent-2);
+      border: 1px solid var(--line);
+    }
+
+    #status {
+      color: var(--muted);
+      margin-top: 0.8rem;
+      min-height: 1.2rem;
+    }
+
+    .result-item {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--ok);
+      border-radius: 10px;
+      padding: 0.65rem;
+      margin-bottom: 0.6rem;
+      background: #fbfffe;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.8rem;
+      margin-left: 0.4rem;
+      color: var(--muted);
+      background: #f4fbfa;
+    }
+
+    .warn {
+      margin-top: 0.8rem;
+      color: #8f3c06;
+      font-weight: 600;
+    }
+
+    .link-quiz {
+      text-decoration: none;
+      color: var(--accent-2);
+      font-weight: 700;
+      display: inline-block;
+      margin-top: 0.4rem;
+    }
+
+    @keyframes subir {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 860px) {
+      .layout {
+        grid-template-columns: 1.1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Quiz de Diagnostico Educacional</h1>
+      <p class="sub">
+        Selecione sintomas e veja possibilidades com base em regras Prolog. Projeto de brincadeira academica.
+      </p>
+      <a class="link-quiz" href="/colonizacao">Ir para quiz da colonizacao portuguesa</a>
+    </section>
+
+    <section class="layout">
+      <article class="card">
+        <h2>Sintomas</h2>
+        <p class="sub">Marque os sintomas percebidos:</p>
+
+        <form id="quizForm">
+          <div class="symptoms" id="symptoms"></div>
+          <div class="actions">
+            <button type="submit" class="primary">Analisar</button>
+            <button type="button" id="clearBtn" class="secondary">Limpar</button>
+          </div>
+        </form>
+
+        <p id="status"></p>
+      </article>
+
+      <article class="card">
+        <h2>Possiveis resultados</h2>
+        <div id="results"></div>
+        <p class="warn">Aviso: nao e diagnostico medico real.</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const symptoms = [
+      "febre", "febre_alta", "tosse", "dor_garganta", "cansaco",
+      "coriza", "espirro", "congestao_nasal", "perda_olfato",
+      "dor_corpo", "dor_cabeca", "manchas_pele", "nausea",
+      "sensibilidade_luz", "dor_estomago", "azia", "inchaco", "coceira_nariz"
+    ];
+
+    const symptomsRoot = document.getElementById("symptoms");
+    const resultsRoot = document.getElementById("results");
+    const statusEl = document.getElementById("status");
+
+    function renderSymptoms() {
+      symptoms.forEach((symptom) => {
+        const id = `sym_${symptom}`;
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="sintoma" value="${symptom}" id="${id}" /> ${symptom.replaceAll("_", " ")}`;
+        symptomsRoot.appendChild(label);
+      });
+    }
+
+    function getSelected() {
+      return Array.from(document.querySelectorAll('input[name="sintoma"]:checked')).map((item) => item.value);
+    }
+
+    async function analyze(event) {
+      event.preventDefault();
+      const selecionados = getSelected();
+
+      if (!selecionados.length) {
+        statusEl.textContent = "Selecione ao menos um sintoma.";
+        resultsRoot.innerHTML = "";
+        return;
+      }
+
+      statusEl.textContent = "Consultando Prolog...";
+      resultsRoot.innerHTML = "";
+
+      const response = await fetch("/api/diagnosticar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sintomas: selecionados })
+      });
+
+      const data = await response.json();
+
+      if (!data.resultados || !data.resultados.length) {
+        statusEl.textContent = "Nenhuma correspondencia encontrada.";
+        return;
+      }
+
+      statusEl.textContent = "Analise concluida.";
+
+      data.resultados.forEach((item) => {
+        const el = document.createElement("div");
+        const sintomasMatch = item.sintomas_que_bateram.join(", ") || "nenhum";
+        el.className = "result-item";
+        el.innerHTML = `
+          <strong>${item.doenca.replaceAll("_", " ")}</strong>
+          <span class="badge">Confianca ${item.confianca}%</span>
+          <div>Sintomas em comum: ${item.sintomas_correspondentes}/${item.total_sintomas_doenca}</div>
+          <div>Match: ${sintomasMatch}</div>
+        `;
+        resultsRoot.appendChild(el);
+      });
+    }
+
+    function clearAll() {
+      document.querySelectorAll('input[name="sintoma"]').forEach((item) => {
+        item.checked = false;
+      });
+      resultsRoot.innerHTML = "";
+      statusEl.textContent = "";
+    }
+
+    document.getElementById("quizForm").addEventListener("submit", analyze);
+    document.getElementById("clearBtn").addEventListener("click", clearAll);
+
+    renderSymptoms();
+  </script>
+</body>
+</html>
