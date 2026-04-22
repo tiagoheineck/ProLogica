@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz da Colonizacao Portuguesa - Prolog + Python</title>
+  <style>
+    :root {
+      --bg-1: #f4efe4;
+      --bg-2: #dfe9dd;
+      --card: #fffef8;
+      --ink: #1f2a2c;
+      --muted: #4f625f;
+      --accent: #8a3b12;
+      --accent-2: #2f6f4f;
+      --line: #d3dbd1;
+      --ok: #3a7a5a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 15%, #fff3d9 0%, transparent 34%),
+        radial-gradient(circle at 85% 15%, #dbead8 0%, transparent 32%),
+        linear-gradient(140deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+      padding: 1.8rem 1rem;
+    }
+
+    .container {
+      width: min(1040px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #fffdf7, #f4f8ef);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.3rem;
+      box-shadow: 0 9px 24px rgba(0, 0, 0, 0.08);
+      animation: subir 520ms ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 4.4vw, 2rem);
+      letter-spacing: 0.3px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.06);
+      animation: subir 760ms ease;
+    }
+
+    .tracks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.45rem 0.55rem;
+      background: #fcfdf9;
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    label:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent-2);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: #f0f6ef;
+      color: var(--accent-2);
+      border: 1px solid var(--line);
+    }
+
+    .back {
+      text-decoration: none;
+      color: var(--accent-2);
+      font-weight: 700;
+      display: inline-block;
+      margin-top: 0.4rem;
+    }
+
+    #status {
+      color: var(--muted);
+      margin-top: 0.8rem;
+      min-height: 1.2rem;
+    }
+
+    .result-item {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--ok);
+      border-radius: 10px;
+      padding: 0.65rem;
+      margin-bottom: 0.6rem;
+      background: #fbfffb;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.8rem;
+      margin-left: 0.4rem;
+      color: var(--muted);
+      background: #f2faf2;
+    }
+
+    .warn {
+      margin-top: 0.8rem;
+      color: #6d370f;
+      font-weight: 600;
+    }
+
+    @keyframes subir {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .layout {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Quiz da Colonizacao Portuguesa</h1>
+      <p class="sub">
+        Marque pistas historicas e veja qual fase da colonizacao portuguesa no Brasil mais combina com as evidencias.
+      </p>
+      <a class="back" href="/">Ir para quiz medico</a>
+    </section>
+
+    <section class="layout">
+      <article class="card">
+        <h2>Pistas historicas</h2>
+        <p class="sub">Selecione os elementos citados na pergunta ou no enunciado:</p>
+
+        <form id="quizFormColonizacao">
+          <div class="tracks" id="tracks"></div>
+          <div class="actions">
+            <button type="submit" class="primary">Analisar fase</button>
+            <button type="button" id="clearBtn" class="secondary">Limpar</button>
+          </div>
+        </form>
+
+        <p id="status"></p>
+      </article>
+
+      <article class="card">
+        <h2>Fases sugeridas</h2>
+        <div id="results"></div>
+        <p class="warn">Aviso: ferramenta educacional de apoio para revisao.</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const tracks = [
+      "descoberta_1500", "extracao_pau_brasil", "primeiros_contatos_indigenas", "escambo", "litoral",
+      "capitanias_hereditarias", "governo_geral", "fundacao_salvador", "acucar_engenhos", "acao_jesuitas",
+      "invasao_holandesa", "resistencia_indigena", "quilombos", "interiorizacao", "economia_acucareira",
+      "ouro_minas", "elevacao_reino", "corte_no_rio", "tensoes_coloniais", "independencia_1822"
+    ];
+
+    const tracksRoot = document.getElementById("tracks");
+    const resultsRoot = document.getElementById("results");
+    const statusEl = document.getElementById("status");
+
+    function renderTracks() {
+      tracks.forEach((track) => {
+        const id = `trk_${track}`;
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="pista" value="${track}" id="${id}" /> ${track.replaceAll("_", " ")}`;
+        tracksRoot.appendChild(label);
+      });
+    }
+
+    function getSelected() {
+      return Array.from(document.querySelectorAll('input[name="pista"]:checked')).map((item) => item.value);
+    }
+
+    async function analyze(event) {
+      event.preventDefault();
+      const selecionadas = getSelected();
+
+      if (!selecionadas.length) {
+        statusEl.textContent = "Selecione ao menos uma pista historica.";
+        resultsRoot.innerHTML = "";
+        return;
+      }
+
+      statusEl.textContent = "Consultando Prolog...";
+      resultsRoot.innerHTML = "";
+
+      const response = await fetch("/api/quiz-colonizacao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pistas: selecionadas })
+      });
+
+      const data = await response.json();
+
+      if (!data.resultados || !data.resultados.length) {
+        statusEl.textContent = "Nenhuma fase encontrada com essas pistas.";
+        return;
+      }
+
+      statusEl.textContent = "Analise concluida.";
+
+      data.resultados.forEach((item) => {
+        const el = document.createElement("div");
+        const pistasMatch = item.pistas_que_bateram.join(", ") || "nenhuma";
+        el.className = "result-item";
+        el.innerHTML = `
+          <strong>${item.fase.replaceAll("_", " ")}</strong>
+          <span class="badge">Confianca ${item.confianca}%</span>
+          <div>Pistas em comum: ${item.pistas_correspondentes}/${item.total_pistas_fase}</div>
+          <div>Match: ${pistasMatch}</div>
+        `;
+        resultsRoot.appendChild(el);
+      });
+    }
+
+    function clearAll() {
+      document.querySelectorAll('input[name="pista"]').forEach((item) => {
+        item.checked = false;
+      });
+      resultsRoot.innerHTML = "";
+      statusEl.textContent = "";
+    }
+
+    document.getElementById("quizFormColonizacao").addEventListener("submit", analyze);
+    document.getElementById("clearBtn").addEventListener("click", clearAll);
+
+    renderTracks();
+  </script>
+</body>
+</html>

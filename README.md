@@ -1,10 +1,28 @@
-# Rode o container
+# Rodando tudo em containers
 
-docker compose up
+Suba a API (Python + SWI-Prolog) em container:
 
-# Acesse o navegador
+```bash
+docker compose up --build
+```
 
-Você terá que copiar e colar os arquivos .pl dentro do software que subirá
+Abra no navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+Se quiser subir tambem o SWISH para estudar Prolog no navegador:
+
+```bash
+docker compose --profile tools up --build
+```
+
+SWISH fica em:
+
+```text
+http://127.0.0.1:3050
+```
 
 
 # Guia Didático de Prolog 🐍🧠
@@ -214,3 +232,74 @@ member(X, [a,b,c]).
 
 Confie na lógica.
 Confie no backtracking.
+
+---
+
+## Mini App Web: Quiz de Diagnostico (Educacional)
+
+Este repositorio agora inclui um exemplo de integracao entre:
+
+- Frontend web (HTML simples)
+- Backend em Python (FastAPI)
+- Regras de inferencia em SWI-Prolog
+
+### Estrutura adicionada
+
+- `app/main.py` -> API FastAPI e chamada do `swipl`
+- `app/static/index.html` -> tela do quiz
+- `prolog/diagnostico.pl` -> base de doencas/sintomas e regras de pontuacao
+- `requirements.txt` -> dependencias Python
+
+### Como executar
+
+Opcao recomendada (100% containerizado):
+
+1. Rode:
+
+```bash
+docker compose up --build
+```
+
+2. Acesse:
+
+```text
+http://127.0.0.1:8000
+```
+
+Opcao local (sem containers):
+
+1. Instale o SWI-Prolog e confirme o comando `swipl` no terminal.
+2. Crie e ative ambiente virtual Python (opcional, recomendado).
+3. Instale dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Rode a API:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+5. Abra no navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+### Endpoint
+
+- `POST /api/diagnosticar`
+
+Payload exemplo:
+
+```json
+{
+	"sintomas": ["febre", "tosse", "cansaco"]
+}
+```
+
+### Aviso importante
+
+Projeto de brincadeira/estudo. Nao substitui avaliacao medica real.

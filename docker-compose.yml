@@ -1,7 +1,19 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prolog-quiz-api
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+
   swish:
     image: swipl/swish
+    container_name: prolog-quiz-swish
     ports:
       - 3050:3050
     volumes:
       - ./data:/data
+    profiles:
+      - tools
